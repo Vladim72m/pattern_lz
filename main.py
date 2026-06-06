@@ -1,23 +1,39 @@
 # Вариант 4
-from builder import ComputerBuilder
-from composite import Folder, File
-from command import Light, OnCommand, Remote
+from builder import MathDayBuilder, Director
+from composite import File, Folder
+from command import Light, Command, Button
 
 def main():
-    # 1. Строитель
-    comp = ComputerBuilder().add_parts()
-    print("Сборка ПК:", comp.parts)
+    builder = MathDayBuilder()
+    director = Director(builder)
 
-    # 2. Компоновщик
-    root = Folder("Корень")
-    root.add(File("doc.txt"))
+    director.build_full_pack()
+    backpack = builder.get_result()
+    print(backpack)
+
+    print("Компоновщик:")
+    file1 = File("document.txt")
+    file2 = File("photo.png")
+
+    root = Folder("Главная папка")
+    subfolder = Folder("Вложенная папка")
+
+    subfolder.add(file2)
+    root.add(file1)
+    root.add(subfolder)
+
     root.show()
 
-    # 3. Команда
+    print("Команды от кнопок:")
     light = Light()
-    remote = Remote()
-    remote.cmd = OnCommand(light)
-    remote.press()
+
+    btn_on = Button("Включить свет", Command(light, "on"))
+    btn_break = Button("Сломать лампу", Command(light, "break_lamp"))
+
+    btn_on.click()
+    btn_break.click()
+    btn_on.click()
+
 
 if __name__ == "__main__":
     main()
